@@ -56,6 +56,17 @@ export function AuthProvider({ children }) {
     await fetchProfile(access)
   }
 
+  const googleLogin = async (googleAccessToken) => {
+    const res = await api.post('/api/auth/google/', { access_token: googleAccessToken })
+    const { access, refresh } = res.data
+
+    localStorage.setItem('access_token', access)
+    localStorage.setItem('refresh_token', refresh)
+    setToken(access)
+
+    await fetchProfile(access)
+  }
+
   const logout = () => {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
@@ -64,10 +75,11 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, token, login, googleLogin, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   )
+
 }
 
 // Custom hook for consuming auth context

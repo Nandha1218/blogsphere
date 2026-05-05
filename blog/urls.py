@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     RegisterView, PostListCreateView, PostDetailView,
     MyPostsView, CategoryListView, UserProfileView,
-    add_comment, like_post
+    add_comment, like_post, GoogleLogin
 )
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -17,6 +17,7 @@ from rest_framework_simplejwt.views import (
 #   POST  register/           → create a new user account
 #   POST  login/              → get access + refresh JWT tokens
 #   POST  refresh/            → exchange refresh token for new access token
+#   POST  auth/google/        → google login
 #
 # Posts
 #   GET   posts/              → list all posts  (supports ?search= ?category=)
@@ -41,6 +42,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('refresh/', TokenRefreshView.as_view(), name='token-refresh'),
+    path('auth/google/', GoogleLogin.as_view(), name='google_login'),
 
     # Posts
     path('posts/', PostListCreateView.as_view(), name='posts'),

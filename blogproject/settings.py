@@ -36,10 +36,46 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'corsheaders',           # Allow React (localhost:5173) to call the API
+    'dj_rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 
     # Local apps
     'blog',
 ]
+
+SITE_ID = 1
+
+# Django Allauth settings
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': config('GOOGLE_CLIENT_ID', default=''),
+            'secret': config('GOOGLE_CLIENT_SECRET', default=''),
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'blog-auth',
+    'JWT_AUTH_REFRESH_COOKIE': 'blog-refresh-token',
+}
+
 
 # ─── Middleware ────────────────────────────────────────────────────────────────
 MIDDLEWARE = [
@@ -51,6 +87,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 # ─── CORS (Cross-Origin Resource Sharing) ────────────────────────────────────
